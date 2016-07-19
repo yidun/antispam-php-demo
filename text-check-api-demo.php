@@ -33,13 +33,13 @@ function gen_signature($secretKey, $params){
 /**
  * 将输入数据的编码统一转换成utf8
  * @params 输入的参数
- * @inCharset 输入参数对象的编码
  */
 function toUtf8($params){
-	$conv = function($value){
-		return is_string($value) ? mb_convert_encoding($value, "utf8", INTERNAL_STRING_CHARSET) : $value;
-	};
-	return array_map($conv, $params);
+	$utf8s = array();
+    foreach ($params as $key => $value) {
+    	$utf8s[$key] = is_string($value) ? mb_convert_encoding($value, "utf8", INTERNAL_STRING_CHARSET) : $value;
+    }
+    return $utf8s;
 }
 
 /**
