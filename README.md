@@ -6,8 +6,8 @@ http://dun.163.com
 
 ```
 .
-├── text-check-api-demo.php 文本在线检查接口演示
+├── text-check-api-demo.php 文本在线检测接口演示
 ├── text-callback-demo.php　文本离线结果获取接口演示
-├── image-check-api-demo.php　图片在线检查接口演示
+├── image-check-api-demo.php　图片在线检测接口演示
 └── image-callback-demo.php 图片离线结果获取接口演示
 ```
