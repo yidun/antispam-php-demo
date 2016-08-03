@@ -5,13 +5,13 @@ http://dun.163.com
 - 文件说明
 
 ```
-├── image
+├── image 图片接口演示
 │   ├── callback.php
 │   └── check.php
-├── livevideo
+├── livevideo 直播视频流接口演示
 │   ├── callback.php
 │   └── check.php
-└── text
+└── text 文本接口演示
     ├── callback.php
     └── check.php
 ```
