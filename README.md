@@ -1,4 +1,4 @@
-## 网易易盾
+# 网易易盾
 http://dun.163.com
 ## 接口说明
 - php 版本 >= 5.x
@@ -10,7 +10,7 @@ http://dun.163.com
 │   └── check.php
 ├── livevideo 直播视频流接口演示
 │   ├── callback.php
-│   └── check.php
+│   └── submit.php
 └── text 文本接口演示
     ├── callback.php
     └── check.php
