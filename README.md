@@ -15,3 +15,6 @@ http://dun.163.com
     ├── callback.php
     └── check.php
 ```
+
+## 使用说明
+- demo程序仅做接口演示，生产环境请根据实际情况补充异常处理逻辑细节。
