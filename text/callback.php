@@ -69,7 +69,11 @@ function check(){
 	var_dump($params);
 	$context  = stream_context_create($options);
 	$result = file_get_contents(API_URL, false, $context);
-	return json_decode($result, true);
+	if($result === FALSE){
+		return array("code"=>500, "msg"=>"file_get_contents failed.");
+	}else{
+		return json_decode($result, true);	
+	}
 }
 
 // 简单测试
@@ -84,7 +88,7 @@ function main(){
 		    echo "callback".$value["callback"].", operation=".$value["operation"]."\n";
 		}
     }else{
-    	// error handler
+    	var_dump($ret);
     }
 }
 
