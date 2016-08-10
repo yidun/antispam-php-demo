@@ -68,7 +68,12 @@ function check(){
 	);
 	$context  = stream_context_create($options);
 	$result = file_get_contents(API_URL, false, $context);
-	return json_decode($result, true);
+	// var_dump($result);
+	if($result === FALSE){
+		return array("code"=>500, "msg"=>"file_get_contents failed.");
+	}else{
+		return json_decode($result, true);	
+	}
 }
 
 // 简单测试
@@ -88,7 +93,7 @@ function main(){
 		    }
 		}
     }else{
-    	// error handler
+    	var_dump($ret);
     }
 }
 
