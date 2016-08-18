@@ -81,6 +81,7 @@ function main(){
 		"dataId"=>"fbfcad1c-dba1-490c-b4de-e784c2691765",
 		"url"=>"http://xxx.xxx.com/xxxx",
 		"callback"=>"{\"p\":\"xx\"}",
+		"scFrequency"=>"5"
 	);
 
 	$ret = submit($params);
