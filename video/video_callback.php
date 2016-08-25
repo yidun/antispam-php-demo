@@ -1,5 +1,5 @@
 <?php
-/** 直播视频检测结果查询接口　*/
+/** 离线视频检查结果查询接口 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
@@ -7,7 +7,7 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务直播视频检测结果获取接口地址 */
-define("API_URL", "https://api.aq.163.com/v2/livevideo/callback/results");
+define("API_URL", "https://api.aq.163.com/v2/video/callback/results");
 /** api version */
 define("VERSION", "v2");
 /** API timeout*/
