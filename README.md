@@ -8,9 +8,11 @@ http://dun.163.com
 ├── image 图片接口演示
 │   ├── callback.php
 │   └── check.php
-├── livevideo 直播视频流接口演示
-│   ├── callback.php
-│   └── check.php
+├── video
+│   ├── livevideo_callback.php 直播视频流结果获取
+│   ├── livevideo_check.php 直播视频流提交
+│   ├── video_callback.php 视频结果获取
+│   └── video_check.php 视频流提交
 └── text 文本接口演示
     ├── callback.php
     └── check.php
