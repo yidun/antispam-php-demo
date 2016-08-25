@@ -1,16 +1,17 @@
 <?php
+/** 离线视频检查结果查询接口 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务直播视频检测接口地址 */
-define("API_URL", "https://api.aq.163.com/v2/livevideo/submit");
+/** 易盾反垃圾云服务视频检测结果获取接口地址 */
+define("API_URL", "https://api.aq.163.com/v2/video/callback/results");
 /** api version */
 define("VERSION", "v2");
 /** API timeout*/
-define("API_TIMEOUT", 1);
+define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
 define("INTERNAL_STRING_CHARSET", "auto");
 
@@ -46,7 +47,8 @@ function toUtf8($params){
  * 反垃圾请求接口简单封装
  * $params 请求参数
  */
-function submit($params){
+function check(){
+    $params = array();
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
@@ -65,8 +67,10 @@ function submit($params){
 	        'content' => http_build_query($params),
 	    ),
 	);
+	// var_dump($params);
 	$context  = stream_context_create($options);
 	$result = file_get_contents(API_URL, false, $context);
+	// var_dump($result);
 	if($result === FALSE){
 		return array("code"=>500, "msg"=>"file_get_contents failed.");
 	}else{
@@ -77,18 +81,20 @@ function submit($params){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
-	$params = array(
-		"dataId"=>"fbfcad1c-dba1-490c-b4de-e784c2691765",
-		"url"=>"http://xxx.xxx.com/xxxx",
-		"callback"=>"{\"p\":\"xx\"}",
-		"scFrequency"=>"5"
-	);
-
-	$ret = submit($params);
+	$ret = check();
 	var_dump($ret);
+
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
-		echo "result = $result";
+		foreach($result as $index => $value){
+			$labels = $value["labels"];
+			if(!empty($labels)){// labels不为空说明发现有问题
+				echo "evidence = ".json_encode($value["evidence"])."\n";
+				foreach ($labels as $i => $label) {
+					echo "label = ".$label["label"].", level = ".$label["level"].", rate = ".$label["rate"]."\n";
+				}
+			}
+		}
     }else{
     	var_dump($ret);
     }
