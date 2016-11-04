@@ -7,9 +7,9 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务视频检测结果获取接口地址 */
-define("API_URL", "https://api.aq.163.com/v2/video/callback/results");
+define("API_URL", "https://api.aq.163.com/v3/video/callback/results");
 /** api version */
-define("VERSION", "v2");
+define("VERSION", "v3");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -85,13 +85,13 @@ function main(){
 	var_dump($ret);
 
 	if ($ret["code"] == 200) {
-		$result = $ret["result"];
-		foreach($result as $index => $value){
-			$labels = $value["labels"];
-			if(!empty($labels)){// labels不为空说明发现有问题
-				echo "evidence = ".json_encode($value["evidence"])."\n";
-				foreach ($labels as $i => $label) {
-					echo "label = ".$label["label"].", level = ".$label["level"].", rate = ".$label["rate"]."\n";
+		$result_array = $ret["result"];
+		foreach($result_array as $res_index => $result){
+			$level = $result["level"];
+			if($level != 0){ // 返回 level == 0表示正常
+				// 从evidences里获取证据信息，详细说明见http://dun.163.com/support/api#API_13
+				foreach ($result['evidences'] as $evi_index => $evidence) {
+					echo json_encode($evidence)."\n";
 				}
 			}
 		}
