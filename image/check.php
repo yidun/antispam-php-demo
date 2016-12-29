@@ -6,9 +6,9 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务图片在线检测接口地址 */
-define("API_URL", "https://api.aq.163.com/v2/image/check");
+define("API_URL", "https://api.aq.163.com/v3/image/check");
 /** api version */
-define("VERSION", "v2");
+define("VERSION", "v3");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -103,9 +103,20 @@ function main(){
 		// var_dump($array);
 		foreach($result as $index => $image_ret){
 		    $name = $image_ret["name"];
-		    echo "name=".$name."\n";
+		    $taskId = $image_ret["taskId"];
+		    $labelArray = $image_ret["labels"];
+		    echo "taskId={$taskId}，name={$name}，labels:\n";
+		    $maxLevel=-1;
 		    foreach($image_ret["labels"] as $index=>$label){
-		        echo "    label=".$label["label"].", level=".$label["level"].", rate=".$label["rate"]."\n";
+		        echo "label:{$label["label"]}, level={$label["level"]}, rate={$label["rate"]}\n";
+			$maxLevel=$label["level"]>$maxLevel?$label["level"]:$maxLevel;
+		    }
+		    if($maxLevel==0){
+			echo "#图片机器检测结果：最高等级为：正常\n";
+		    }else if($maxLevel==1){
+			echo "#图片机器检测结果：最高等级为：嫌疑\n";
+		    }else if($maxLevel==2){
+			echo "#图片机器检测结果：最高等级为：确定\n";
 		    }
 		}
     }else{

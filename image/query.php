@@ -5,10 +5,10 @@ define("SECRETID", "your_secret_id");
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务文本离线检测结果获取接口地址 */
-define("API_URL", "https://api.aq.163.com/v3/text/callback/results");
+/** 易盾反垃圾云服务图片在线检测接口地址 */
+define("API_URL", "https://api.aq.163.com/v1/image/query/task");
 /** api version */
-define("VERSION", "v3");
+define("VERSION", "v1");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -46,8 +46,7 @@ function toUtf8($params){
  * 反垃圾请求接口简单封装
  * $params 请求参数
  */
-function check(){
-    $params = array();
+function check($params){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
@@ -59,16 +58,16 @@ function check(){
 	// var_dump($params);
 
 	$options = array(
-	    'http' => array(
-	        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-	        'method'  => 'POST',
-	        'timeout' => API_TIMEOUT, // read timeout in seconds
-	        'content' => http_build_query($params),
+	    "http" => array(
+	        "header"  => "Content-type: application/x-www-form-urlencoded\r\n",
+	        "method"  => "POST",
+	        "timeout" => API_TIMEOUT, // read timeout in seconds
+	        "content" => http_build_query($params),
 	    ),
 	);
-	var_dump($params);
 	$context  = stream_context_create($options);
 	$result = file_get_contents(API_URL, false, $context);
+	// var_dump($result);
 	if($result === FALSE){
 		return array("code"=>500, "msg"=>"file_get_contents failed.");
 	}else{
@@ -79,29 +78,39 @@ function check(){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
-	$ret = check();
+	$taskIds = array("202b1d65f5854cecadcb24382b681c1a","0f0345933b05489c9b60635b0c8cc721");
+	$params = array(
+		"taskIds"=>json_encode($taskIds)
+	);
+	var_dump($params);
+
+	$ret = check($params);
 	var_dump($ret);
-	
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
- 		if(empty($result)){
-		    echo "暂时没有人工复审结果需要获取，请稍后重试！";		
-		}
-		foreach($result as $index => $value){
-		    $action = $value["action"];
-		    $taskId = $value["taskId"];
-		    $callback = $value["callback"];
-		    $labelArray = $value["labels"];
-		    if ($action == 0) {
-			echo "taskId={$taskId}，callback={$callback}，文本人工复审结果：通过\n";
-		    } else if ($action == 2) {
-			echo "taskId={$taskId}，callback={$callback}，文本人工复审结果：不通过，分类信息如下：".json_encode($labelArray)."\n";
-	            }
+		// var_dump($array);
+		foreach($result as $index => $image_ret){
+		    $name = $image_ret["name"];
+		    $taskId = $image_ret["taskId"];
+		    $status = $image_ret["status"];
+		    $labelArray = $image_ret["labels"];
+		    echo "taskId={$taskId}，status={$status}，name={$name}，labels:\n";
+		    $maxLevel=-1;
+		    foreach($image_ret["labels"] as $index=>$label){
+		        echo "label:{$label["label"]}, level={$label["level"]}, rate={$label["rate"]}\n";
+			$maxLevel=$label["level"]>$maxLevel?$label["level"]:$maxLevel;
+		    }
+		    if($maxLevel==0){
+			echo "#图片查询结果：最高等级为：正常\n";
+		    }else if($maxLevel==1){
+			echo "#图片查询结果：最高等级为：嫌疑\n";
+		    }else if($maxLevel==2){
+			echo "#图片查询结果：最高等级为：确定\n";
+		    }
 		}
     }else{
     	var_dump($ret);
     }
 }
-
 main();
 ?>
