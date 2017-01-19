@@ -24,8 +24,10 @@ function gen_signature($secretKey, $params){
 	ksort($params);
 	$buff="";
 	foreach($params as $key=>$value){
-		$buff .=$key;
+	     if($value !== null) {
+	        $buff .=$key;
 		$buff .=$value;
+    	     }
 	}
 	$buff .= $secretKey;
 	return md5($buff);
