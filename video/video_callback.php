@@ -89,6 +89,11 @@ function main(){
 	if ($ret["code"] == 200) {
 		$result_array = $ret["result"];
 		foreach($result_array as $res_index => $result){
+			$status = $result["status"];
+			if($status!=0){
+				echo "视频异常，status=".$status;
+				continue;
+			}
 			$level = $result["level"];
 			if($level != 0){ // 返回 level == 0表示正常
 				// 从evidences里获取证据信息，详细说明见http://dun.163.com/support/api#API_13
