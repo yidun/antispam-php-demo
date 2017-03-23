@@ -6,9 +6,9 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务文本离线检测结果获取接口地址 */
-define("API_URL", "https://api.aq.163.com/v2/text/callback/results");
+define("API_URL", "https://api.aq.163.com/v3/text/callback/results");
 /** api version */
-define("VERSION", "v2");
+define("VERSION", "v3");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -23,8 +23,10 @@ function gen_signature($secretKey, $params){
 	ksort($params);
 	$buff="";
 	foreach($params as $key=>$value){
-		$buff .=$key;
+	     if($value !== null) {
+	        $buff .=$key;
 		$buff .=$value;
+    	     }
 	}
 	$buff .= $secretKey;
 	return md5($buff);
@@ -84,8 +86,19 @@ function main(){
 	
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
+ 		if(empty($result)){
+		    echo "暂时没有人工复审结果需要获取，请稍后重试！";		
+		}
 		foreach($result as $index => $value){
-		    echo "callback".$value["callback"].", operation=".$value["operation"]."\n";
+		    $action = $value["action"];
+		    $taskId = $value["taskId"];
+		    $callback = $value["callback"];
+		    $labelArray = $value["labels"];
+		    if ($action == 0) {
+			echo "taskId={$taskId}，callback={$callback}，文本人工复审结果：通过\n";
+		    } else if ($action == 2) {
+			echo "taskId={$taskId}，callback={$callback}，文本人工复审结果：不通过，分类信息如下：".json_encode($labelArray)."\n";
+	            }
 		}
     }else{
     	var_dump($ret);

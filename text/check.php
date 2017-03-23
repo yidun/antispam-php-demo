@@ -6,11 +6,11 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务文本在线检测接口地址 */
-define("API_URL", "https://api.aq.163.com/v2/text/check");
+define("API_URL", "https://api.aq.163.com/v3/text/check");
 /** api version */
-define("VERSION", "v2");
+define("VERSION", "v3");
 /** API timeout*/
-define("API_TIMEOUT", 1);
+define("API_TIMEOUT", 2);
 /** php内部使用的字符串编码 */
 define("INTERNAL_STRING_CHARSET", "auto");
 
@@ -23,8 +23,10 @@ function gen_signature($secretKey, $params){
 	ksort($params);
 	$buff="";
 	foreach($params as $key=>$value){
-		$buff .=$key;
+	     if($value !== null) {
+	        $buff .=$key;
 		$buff .=$value;
+    	     }
 	}
 	$buff .= $secretKey;
 	return md5($buff);
@@ -79,7 +81,7 @@ function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$params = array(
 		"dataId"=>"ebfcad1c-dba1-490c-b4de-e784c2691768",
-		"content"=>"易盾测试内容！",
+		"content"=>"易盾测试内容！v3接口！",
 		"dataType"=>"1",
 		"ip"=>"123.115.77.137",
 		"account"=>"php@163.com",
@@ -93,16 +95,18 @@ function main(){
 	var_dump($ret);
 	if ($ret["code"] == 200) {
 		$action = $ret["result"]["action"];
-       	if ($action == 1) {// 内容正常，通过
-       		echo "content is normal\n";
-      	} else if ($action == 2) {// 垃圾内容，删除
-      		echo "content is spam\n";
-        } else if ($action == 3) {// 嫌疑内容
-        	echo "content is suspect\n";
-        }
-    }else{
-    	var_dump($ret); // error handler
-    }
+		$taskId = $ret["result"]["taskId"];
+		$labelArray = $ret["result"]["labels"];
+	       	if ($action == 0) {
+			echo "taskId={$taskId}，文本机器检测结果：通过\n";
+	      	} else if ($action == 1) {
+	      		echo "taskId={$taskId}，文本机器检测结果：嫌疑，需人工复审，分类信息如下：".json_encode($labelArray)."\n";
+		} else if ($action == 2) {
+			echo "taskId={$taskId}，文本机器检测结果：不通过，分类信息如下：".json_encode($labelArray)."\n";
+		}
+    	}else{
+    		var_dump($ret); // error handler
+    	}
 }
 
 main();
