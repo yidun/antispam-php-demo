@@ -89,7 +89,7 @@ function main(){
 	if ($ret["code"] == 200) {
 		$result_array = $ret["result"];
 		foreach($result_array as $res_index => $result){
-			//0:正常，10：检测中，20：不是7天内数据，30：taskId不存在，110：请求重复，120：参数错误，130：解析错误，140：数据类型错误
+			//-1:提交检测失败，0:正常，10：检测中，20：不是7天内数据，30：taskId不存在，110：请求重复，120：参数错误，130：解析错误，140：数据类型错误
 		    $status = $result["status"];
 		    $taskId = $result["taskId"];
 			if($status!=0){
