@@ -82,9 +82,9 @@ function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$images = array();
 	array_push($images, array(// type=1表示传图片url检查
-		"name" => "http://p1.music.126.net/lEQvXzoC17AFKa6yrf-ldA==/1412872446212751.jpg",
+		"name" => "http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg",
 		"type" => 1,
-		"data" => "http://p1.music.126.net/lEQvXzoC17AFKa6yrf-ldA==/1412872446212751.jpg",
+		"data" => "http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg",
 	));
 	array_push($images, array( // type=2表示传图片base64编码进行检查
 		"name" => "{\"imageId\": 33451123, \"contentId\": 78978}",
