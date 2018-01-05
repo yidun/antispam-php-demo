@@ -6,7 +6,7 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务图片离线检测结果获取接口地址 */
-define("API_URL", "https://api.aq.163.com/v3/image/callback/results");
+define("API_URL", "https://as.dun.163yun.com/v3/image/callback/results");
 /** api version */
 define("VERSION", "v3");
 /** API timeout*/
