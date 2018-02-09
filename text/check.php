@@ -8,7 +8,7 @@ define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务文本在线检测接口地址 */
 define("API_URL", "https://as.dun.163yun.com/v3/text/check");
 /** api version */
-define("VERSION", "v3");
+define("VERSION", "v3.1");
 /** API timeout*/
 define("API_TIMEOUT", 2);
 /** php内部使用的字符串编码 */
