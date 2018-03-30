@@ -8,7 +8,7 @@ define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务图片在线检测接口地址 */
 define("API_URL", "https://as.dun.163yun.com/v3/image/check");
 /** api version */
-define("VERSION", "v3.1");
+define("VERSION", "v3.2");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -106,8 +106,9 @@ function main(){
 		foreach($result as $index => $image_ret){
 		    $name = $image_ret["name"];
 		    $taskId = $image_ret["taskId"];
+		    $status = $image_ret["status"];
 		    $labelArray = $image_ret["labels"];
-		    echo "taskId={$taskId}，name={$name}，labels:\n";
+		    echo "taskId={$taskId}，status={$status}，name={$name}，labels:\n";
 		    $maxLevel=-1;
 		    foreach($image_ret["labels"] as $index=>$label){
 		        echo "label:{$label["label"]}, level={$label["level"]}, rate={$label["rate"]}\n";
