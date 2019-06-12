@@ -82,8 +82,8 @@ function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$params = array(
 		"dataId"=>"fbfcad1c-dba1-490c-b4de-e784c2691765",
-		"url"=>"http://xxx.xxx.com/xxxx",
-		"callback"=>"{\"p\":\"xx\"}",
+		"url"=>"http://xxx.xxx.com/xxxx"
+		// "callback"=>"{\"p\":\"xx\"}",
 	);
 
 	$ret = check($params);
