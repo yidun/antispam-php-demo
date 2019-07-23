@@ -6,9 +6,9 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务图片在线检测接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v3/image/check");
+define("API_URL", "https://as.dun.163yun.com/v4/image/check");
 /** api version */
-define("VERSION", "v3.2");
+define("VERSION", "v4");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -82,9 +82,9 @@ function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$images = array();
 	array_push($images, array(// type=1表示传图片url检查
-		"name" => "http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg",
+		"name" => "https://nos.netease.com/yidun/2-0-0-a6133509763d4d6eac881a58f1791976.jpg",
 		"type" => 1,
-		"data" => "http://nos.netease.com/yidun/2-0-0-4038669695e344a4addc546f772e90a5.jpg",
+		"data" => "https://nos.netease.com/yidun/2-0-0-a6133509763d4d6eac881a58f1791976.jpg",
 	));
 	array_push($images, array( // type=2表示传图片base64编码进行检查
 		"name" => "{\"imageId\": 33451123, \"contentId\": 78978}",
@@ -101,27 +101,38 @@ function main(){
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
-		$result = $ret["result"];
-		// var_dump($array);
-		foreach($result as $index => $image_ret){
+		$antispamArray = $ret["antispam"];
+		foreach($antispamArray as $index => $image_ret){
 		    $name = $image_ret["name"];
 		    $taskId = $image_ret["taskId"];
-		    $status = $image_ret["status"];
+		    $action = $image_ret["action"];
 		    $labelArray = $image_ret["labels"];
-		    echo "taskId={$taskId}，status={$status}，name={$name}，labels:\n";
-		    $maxLevel=-1;
-		    foreach($image_ret["labels"] as $index=>$label){
+		    echo "taskId={$taskId}，name={$name}，action={$action}\n";
+		    foreach($labelArray as $index=>$label){
+		        // subLabels为二级分类数组，根据需要解析
+		        $subLabels = $label["subLabels"];
 		        echo "label:{$label["label"]}, level={$label["level"]}, rate={$label["rate"]}\n";
-			$maxLevel=$label["level"]>$maxLevel?$label["level"]:$maxLevel;
 		    }
-		    if($maxLevel==0){
+		    if($action==0){
 			echo "#图片机器检测结果：最高等级为：正常\n";
-		    }else if($maxLevel==1){
+		    }else if($action==1){
 			echo "#图片机器检测结果：最高等级为：嫌疑\n";
-		    }else if($maxLevel==2){
+		    }else if($action==2){
 			echo "#图片机器检测结果：最高等级为：确定\n";
 		    }
 		}
+		$ocrArray = $ret["ocr"];
+        foreach($ocrArray as $index => $ocr){
+            $name = $ocr["name"];
+            $taskId = $ocr["taskId"];
+            $detailArray = $ocr["details"];
+            echo "taskId={$taskId}，name={$name}\n";
+            foreach($detailArray as $index=>$detail){
+                // lineContents为ocr片段及坐标信息，根据需要解析
+                $lineContents = $detail["lineContents"];
+                echo "识别ocr文本内容:{$detail["content"]}\n";
+            }
+        }
     }else{
     	var_dump($ret);
     }

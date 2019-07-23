@@ -6,9 +6,9 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务图片离线检测结果获取接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v3/image/callback/results");
+define("API_URL", "https://as.dun.163yun.com/v4/image/callback/results");
 /** api version */
-define("VERSION", "v3.1");
+define("VERSION", "v4");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -85,21 +85,19 @@ function main(){
 	var_dump($ret);
 	
 	if ($ret["code"] == 200) {
-		$result = $ret["result"];
-		// var_dump($array);
-		foreach($result as $index => $image_ret){
+		$antispamArray = $ret["antispam"];
+		foreach($antispamArray as $index => $image_ret){
 		    $name = $image_ret["name"];
 		    $taskId = $image_ret["taskId"];
+		    $action = $image_ret["action"];
 		    $labelArray = $image_ret["labels"];
-		    echo "taskId={$taskId}，name={$name}，labels:\n";
-		    $maxLevel=-1;
+		    echo "taskId={$taskId}，name={$name}，action={$action}\n";
 		    foreach($image_ret["labels"] as $index=>$label){
 		        echo "label:{$label["label"]}, level={$label["level"]}, rate={$label["rate"]}\n";
-			$maxLevel=$label["level"]>$maxLevel?$label["level"]:$maxLevel;
 		    }
-		    if($maxLevel==0){
+		    if($action==0){
 			echo "#图片人工复审结果：最高等级为：正常\n";
-		    }else if($maxLevel==2){
+		    }else if($action==2){
 			echo "#图片人工复审结果：最高等级为：确定\n";
 		    }
 		}
