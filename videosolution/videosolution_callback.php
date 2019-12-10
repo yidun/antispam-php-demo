@@ -51,7 +51,7 @@ function check(){
     $params = array();
 	$params["secretId"] = SECRETID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);
@@ -85,6 +85,15 @@ function main(){
 
 	if ($ret["code"] == 200) {
 		$result_array = $ret["result"];
+        foreach($result_array as $res_index => $resultInfo){
+            $taskId = $resultInfo["taskId"];
+            $dataId = $resultInfo["dataId"];
+            $result = $resultInfo["result"];
+            $callback = $resultInfo["callback"];
+            // 证据信息
+            $evidencesObject = $resultInfo["evidences"];
+            echo "音视频解决方案结果：taskId={$taskId}：dataId={$dataId}：result={$result}：callback={$callback}";
+        }
     }else{
     	var_dump($ret);
     }

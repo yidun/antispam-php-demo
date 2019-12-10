@@ -52,7 +52,7 @@ function check($params){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);
@@ -105,32 +105,73 @@ function main(){
 		foreach($antispamArray as $index => $image_ret){
 		    $name = $image_ret["name"];
 		    $taskId = $image_ret["taskId"];
-		    $action = $image_ret["action"];
-		    $labelArray = $image_ret["labels"];
-		    echo "taskId={$taskId}，name={$name}，action={$action}\n";
-		    foreach($labelArray as $index=>$label){
-		        // subLabels为二级分类数组，根据需要解析
-		        $subLabels = $label["subLabels"];
-		        echo "label:{$label["label"]}, level={$label["level"]}, rate={$label["rate"]}\n";
-		    }
-		    if($action==0){
-			echo "#图片机器检测结果：最高等级为：正常\n";
-		    }else if($action==1){
-			echo "#图片机器检测结果：最高等级为：嫌疑\n";
-		    }else if($action==2){
-			echo "#图片机器检测结果：最高等级为：确定\n";
+		    $status = $image_ret["status"];
+		    if($status==0){
+		        $action = $image_ret["action"];
+                $labelArray = $image_ret["labels"];
+                echo "taskId={$taskId}，name={$name}，action={$action}\n";
+                foreach($labelArray as $index=>$label){
+                    // subLabels为二级分类数组，根据需要解析
+                    $subLabels = $label["subLabels"];
+                    echo "label:{$label["label"]}, level={$label["level"]}, rate={$label["rate"]}\n";
+                }
+                if($action==0){
+                    echo "#图片机器检测结果：最高等级为：正常\n";
+                }else if($action==1){
+                    echo "#图片机器检测结果：最高等级为：嫌疑\n";
+                }else if($action==2){
+                    echo "#图片机器检测结果：最高等级为：确定\n";
+                }
+		    } else {
+                // status对应失败状态码：610：图片下载失败，620：图片格式错误，630：其它
+                echo "图片检测失败,taskId:{$taskId}, status={$status}, name={$name}\n";
 		    }
 		}
+		// 图片OCR结果
 		$ocrArray = $ret["ocr"];
         foreach($ocrArray as $index => $ocr){
             $name = $ocr["name"];
             $taskId = $ocr["taskId"];
             $detailArray = $ocr["details"];
             echo "taskId={$taskId}，name={$name}\n";
+            // 产品需根据自身需求，自行解析处理，本示例只是简单输出ocr结果信息
             foreach($detailArray as $index=>$detail){
-                // lineContents为ocr片段及坐标信息，根据需要解析
+                // 识别ocr文本内容
+                $content = $detail["content"];
+                // ocr片段及坐标信息
                 $lineContents = $detail["lineContents"];
-                echo "识别ocr文本内容:{$detail["content"]}\n";
+            }
+        }
+        // 图片人脸检测结果
+        $faceArray = $ret["face"];
+        foreach($faceArray as $index => $face){
+            $name = $face["name"];
+            $taskId = $face["taskId"];
+            $detailArray = $face["details"];
+            echo "taskId={$taskId}，name={$name}\n";
+            // 产品需根据自身需求，自行解析处理，本示例只是简单输出人脸结果信息
+            foreach($detailArray as $index=>$detail){
+                // 识别人脸数量
+                $faceNumber = $detail["faceNumber"];
+                // 人物信息及坐标信息
+                $faceContents = $detail["faceContents"];
+            }
+        }
+        // 图片质量检测结果
+        $qualityArray = $ret["quality"];
+        foreach($qualityArray as $index => $quality){
+            $name = $quality["name"];
+            $taskId = $quality["taskId"];
+            $detailArray = $quality["details"];
+            echo "taskId={$taskId}，name={$name}\n";
+            // 产品需根据自身需求，自行解析处理，本示例只是简单输出质量结果信息
+            foreach($detailArray as $index=>$detail){
+                // 图片美观度分数
+                $aestheticsRate = $detail["aestheticsRate"];
+                // 图片基本信息
+                $metaInfo = $detail["metaInfo"];
+                // 图片边框信息
+                $boarderInfo = $detail["boarderInfo"];
             }
         }
     }else{
