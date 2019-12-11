@@ -5,7 +5,7 @@ define("SECRETID", "your_secret_id");
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务图片在线检测接口地址 */
+/** 易盾反垃圾云服务图片查询接口地址 */
 define("API_URL", "https://as.dun.163yun.com/v1/image/query/task");
 /** api version */
 define("VERSION", "v1");
@@ -52,7 +52,7 @@ function check($params){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);

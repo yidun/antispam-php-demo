@@ -7,7 +7,7 @@ define("SECRETKEY", "your_secret_key");
 /** 易盾反垃圾云服务文档解决方案检测接口地址 */
 define("API_URL", "https://as-file.dun.163yun.com/v1/file/submit");
 /** api version */
-define("VERSION", "v1");
+define("VERSION", "v1.1");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -50,7 +50,7 @@ function toUtf8($params){
 function check($params){
 	$params["secretId"] = SECRETID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);
@@ -93,6 +93,7 @@ function main(){
 		$result = $ret["result"];
         $dataId = $result["dataId"];
         $taskId = $result["taskId"];
+        echo "提交成功，taskId={$taskId},dataId={$dataId}";
     }else{
     	var_dump($ret);
     }

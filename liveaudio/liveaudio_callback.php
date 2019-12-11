@@ -9,7 +9,7 @@ define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务音频检测结果获取接口地址 */
 define("API_URL", "https://as-liveaudio.dun.163yun.com/v1/liveaudio/callback/results");
 /** api version */
-define("VERSION", "v1");
+define("VERSION", "v1.1");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -54,7 +54,7 @@ function check(){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);
@@ -92,6 +92,11 @@ function main(){
 		    $taskId = $result["taskId"];
 			$action = $result["action"];
             $segment_array = $result["segments"];
+            // 证据信息如下
+            /*foreach($segment_array as $label_index => $segmentsInfo){
+                $label = $segmentsInfo["label"];
+                $level = $segmentsInfo["level"];
+            }*/
             if ($action == 0) {
                 echo "结果：通过，taskId=".$taskId;
             } else if ($action == 2) {

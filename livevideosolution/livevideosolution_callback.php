@@ -1,15 +1,13 @@
 <?php
-/** 离线音频检查结果查询接口 */
+/** 直播音视频解决方案检查结果查询接口 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
-/** 业务ID，易盾根据产品业务特点分配 */
-define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务音频检测结果获取接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v3/audio/callback/results");
+/** 易盾反垃圾云服务直播音视频解决方案结果获取接口地址 */
+define("API_URL", "https://as.dun.163yun.com/v1/livewallsolution/callback/results");
 /** api version */
-define("VERSION", "v3");
+define("VERSION", "v1.0");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -52,7 +50,6 @@ function toUtf8($params){
 function check(){
     $params = array();
 	$params["secretId"] = SECRETID;
-	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
 	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
@@ -87,30 +84,13 @@ function main(){
 	var_dump($ret);
 
 	if ($ret["code"] == 200) {
-		$result_array = $ret["antispam"];
-		foreach($result_array as $res_index => $result){
-		    $taskId = $result["taskId"];
-		    $asrStatus = $result["asrStatus"];
-		    if($asrStatus == 4) {
-                $asrResult = $result["asrResult"];
-                echo "检测失败: taskId={$taskId}, asrResult={$asrResult}";
-		    } else {
-                $action = $result["action"];
-                $label_array = $result["labels"];
-                // 证据信息如下
-                /*foreach($label_array as $label_index => $labelInfo){
-                    $label = $labelInfo["label"];
-                    $level = $labelInfo["level"];
-                    $detailsObject = $labelInfo["details"];
-                    $hint_array = $detailsObject["hint"];
-                }*/
-                if ($action == 0) {
-                    echo "结果：通过，taskId=".$taskId;
-                } else if ($action == 2) {
-                    echo "结果：不通过，taskId=".$taskId;
-                }
-		    }
-		}
+		$result_array = $ret["result"];
+        foreach($result_array as $res_index => $resultInfo){
+            $taskId = $resultInfo["taskId"];
+            $action = $resultInfo["action"];
+            $label = $resultInfo["label"];
+            echo "音视频解决方案结果：taskId={$taskId}：action={$action}：label={$label}";
+        }
     }else{
     	var_dump($ret);
     }

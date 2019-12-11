@@ -1,15 +1,14 @@
 <?php
-/** 离线音频检查结果查询接口 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务音频检测结果获取接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v3/audio/callback/results");
+/** 易盾反垃圾云服务直播视频查询接口地址 */
+define("API_URL", "https://as.dun.163yun.com/v1/livevideo/query/task");
 /** api version */
-define("VERSION", "v3");
+define("VERSION", "v1");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -49,8 +48,7 @@ function toUtf8($params){
  * 反垃圾请求接口简单封装
  * $params 请求参数
  */
-function check(){
-    $params = array();
+function check($params){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
@@ -62,14 +60,13 @@ function check(){
 	// var_dump($params);
 
 	$options = array(
-	    'http' => array(
-	        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-	        'method'  => 'POST',
-	        'timeout' => API_TIMEOUT, // read timeout in seconds
-	        'content' => http_build_query($params),
+	    "http" => array(
+	        "header"  => "Content-type: application/x-www-form-urlencoded\r\n",
+	        "method"  => "POST",
+	        "timeout" => API_TIMEOUT, // read timeout in seconds
+	        "content" => http_build_query($params),
 	    ),
 	);
-	// var_dump($params);
 	$context  = stream_context_create($options);
 	$result = file_get_contents(API_URL, false, $context);
 	// var_dump($result);
@@ -83,38 +80,32 @@ function check(){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
-	$ret = check();
-	var_dump($ret);
+	$taskIds = array("202b1d65f5854cecadcb24382b681c1a","0f0345933b05489c9b60635b0c8cc721");
+	$params = array(
+		"taskIds"=>json_encode($taskIds)
+	);
+	var_dump($params);
 
+	$ret = check($params);
+	var_dump($ret);
 	if ($ret["code"] == 200) {
-		$result_array = $ret["antispam"];
-		foreach($result_array as $res_index => $result){
-		    $taskId = $result["taskId"];
-		    $asrStatus = $result["asrStatus"];
-		    if($asrStatus == 4) {
-                $asrResult = $result["asrResult"];
-                echo "检测失败: taskId={$taskId}, asrResult={$asrResult}";
-		    } else {
-                $action = $result["action"];
-                $label_array = $result["labels"];
-                // 证据信息如下
-                /*foreach($label_array as $label_index => $labelInfo){
-                    $label = $labelInfo["label"];
-                    $level = $labelInfo["level"];
-                    $detailsObject = $labelInfo["details"];
-                    $hint_array = $detailsObject["hint"];
-                }*/
-                if ($action == 0) {
-                    echo "结果：通过，taskId=".$taskId;
-                } else if ($action == 2) {
-                    echo "结果：不通过，taskId=".$taskId;
-                }
-		    }
+		$result = $ret["result"];
+		// var_dump($array);
+		foreach($result as $index => $live_ret){
+		    // 直播视频唯一id
+		    $taskId = $live_ret["taskId"];
+		    // 直播状态, 101:直播中，102：直播结束
+		    $status = $live_ret["status"];
+		    // 回调标识
+		    $callback = $live_ret["callback"];
+		    // 直播检测状态(0:检测成功，10：检测中，110：请求重复，120：参数错误，130：解析错误，140：数据类型错误，150：并发超限)
+		    $callbackStatus = $live_ret["callbackStatus"];
+		    // 过期状态（20:直播不是七天内的数据，30：直播taskId不存在）
+		    $expireStatus = $live_ret["expireStatus"];
 		}
     }else{
     	var_dump($ret);
     }
 }
-
 main();
 ?>
