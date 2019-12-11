@@ -3,8 +3,6 @@
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
-/** 业务ID，易盾根据产品业务特点分配 */
-define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务文档解决方案查询接口地址 */
 define("API_URL", "https://as.dun.163yun.com/v1/file/query");
 /** api version */
@@ -50,7 +48,6 @@ function toUtf8($params){
  */
 function check($params){
 	$params["secretId"] = SECRETID;
-	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
 	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
