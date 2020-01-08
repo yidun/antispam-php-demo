@@ -1,18 +1,20 @@
 <?php
+/** 音频提交检测接口 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务文本結果查詢接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v1/text/query/task");
+/** 易盾反垃圾云服务音频taskId查询接口地址 */
+define("API_URL", "https://as.dun.163yun.com/v1/audio/query/task");
 /** api version */
 define("VERSION", "v1");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
 define("INTERNAL_STRING_CHARSET", "auto");
+
 
 /**
  * 计算参数签名
@@ -60,15 +62,16 @@ function check($params){
 	// var_dump($params);
 
 	$options = array(
-	    'http' => array(
-	        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-	        'method'  => 'POST',
-	        'timeout' => API_TIMEOUT, // read timeout in seconds
-	        'content' => http_build_query($params),
+	    "http" => array(
+	        "header"  => "Content-type: application/x-www-form-urlencoded\r\n",
+	        "method"  => "POST",
+	        "timeout" => API_TIMEOUT, // read timeout in seconds
+	        "content" => http_build_query($params),
 	    ),
 	);
 	$context  = stream_context_create($options);
 	$result = file_get_contents(API_URL, false, $context);
+	// var_dump($result);
 	if($result === FALSE){
 		return array("code"=>500, "msg"=>"file_get_contents failed.");
 	}else{
@@ -79,31 +82,31 @@ function check($params){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
-	$taskIds = array("c679d93d4a8d411cbe3454214d4b1fd7","49800dc7877f4b2a9d2e1dec92b988b6");
+	$taskIds = array("202b1d65f5854cecadcb24382b681c1a","0f0345933b05489c9b60635b0c8cc721");
 	$params = array(
 		"taskIds"=>json_encode($taskIds)
 	);
+	var_dump($params);
 
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
-		foreach($result as $index => $value){
-		    $action = $value["action"];
-		    $taskId = $value["taskId"];
-		    $status = $value["status"];
-		    $callback = $value["callback"];
-		    $labelArray = $value["labels"];
-		    if ($action == 0) {
-			echo "taskId={$taskId}，status={$status}，callback={$callback}，文本查询结果：通过\n";
-		    } else if ($action == 2) {
-			echo "taskId={$taskId}，status={$status}，callback={$callback}，文本查询结果：不通过，分类信息如下：".json_encode($labelArray)."\n";
-	            }
+		// var_dump($array);
+		foreach($result as $index => $audio_ret){
+		    $taskId = $audio_ret["taskId"];
+		    $action= $audio_ret["action"];
+		    // 分类信息
+		    $labelArray = $audio_ret["labels"];
+		    if($action==0){
+			    echo "结果：通过,taskId:{$taskId}\n";
+		    }else if($action==2){
+			    echo "结果：不通过,taskId:{$taskId}\n";
+		    }
 		}
-    	}else{
-    		var_dump($ret); // error handler
-    	}
+    }else{
+    	var_dump($ret);
+    }
 }
-
 main();
 ?>

@@ -52,7 +52,7 @@ function check($params){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);
@@ -81,14 +81,14 @@ function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$params = array(
 		"dataId"=>"ebfcad1c-dba1-490c-b4de-e784c2691768",
-		"content"=>"易盾测试内容！v3接口！",
-		"dataType"=>"1",
-		"ip"=>"123.115.77.137",
-		"account"=>"php@163.com",
-		"deviceType"=>"4",
-		"deviceId"=>"92B1E5AA-4C3D-4565-A8C2-86E297055088",
-		"callback"=>"ebfcad1c-dba1-490c-b4de-e784c2691768",
-		"publishTime"=>round(microtime(true)*1000)
+		"content"=>"易盾测试内容！v3接口！"
+		// "dataType"=>"1",
+		// "ip"=>"123.115.77.137",
+		// "account"=>"php@163.com",
+		// "deviceType"=>"4",
+		// "deviceId"=>"92B1E5AA-4C3D-4565-A8C2-86E297055088",
+		// "callback"=>"ebfcad1c-dba1-490c-b4de-e784c2691768",
+		// "publishTime"=>round(microtime(true)*1000)
 	);
 
 	$ret = check($params);

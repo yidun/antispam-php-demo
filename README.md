@@ -5,17 +5,40 @@ http://dun.163.com
 - 文件说明
 
 ```
+├── audio 点播语音接口演示
+│   ├── audio_callback.php 点播语音结果获取
+│   └── audio_check.php 点播语音提交
+│   └── audio_query.php 点播语音taskId查询
+├── liveaudio 直播语音接口演示
+│   ├── liveaudio_callback.php 直播语音结果获取
+│   └── liveaudio_check.php 直播语音提交
+├── filesolution 文档解决方案提交接口演示
+│   ├── filesolution_callback.php 文档解决方案提交结果获取
+│   └── filesolution_check.php 文档解决方案提交
+│   └── filesolution_query.php 文档解决方案taskId查询
+├── videosolution 点播音视频解决方案接口演示
+│   ├── videosolution_callback.php 点播音视频解决方案结果获取
+│   └── videosolution_check.php 点播音视频解决方案提交
 ├── image 图片接口演示
-│   ├── callback.php
-│   └── check.php
+│   ├── callback.php 图片回调
+│   └── check.php 图片检测
+│   └── submit.php 图片数据抄送 
+│   └── query.php 图片taskId查询
 ├── video
 │   ├── livevideo_callback.php 直播视频流结果获取
 │   ├── livevideo_check.php 直播视频流提交
+│   ├── livevideo_query.php 直播视频流taskId查询
+│   ├── livewall_callback.php 直播电视墙回调
+│   ├── livewall_check.php 直播电视墙回调流提交
 │   ├── video_callback.php 视频结果获取
 │   └── video_check.php 视频流提交
+│   └── video_query.php 视频流taskId查询
 └── text 文本接口演示
-    ├── callback.php
-    └── check.php
+    ├── submit.php 文本数据抄送
+    ├── query.php 文本taskId查询
+    ├── callback.php 文本回调
+    └── check.php 文本检测
+    
 ```
 
 ## 使用说明

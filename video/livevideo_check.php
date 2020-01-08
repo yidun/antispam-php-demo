@@ -7,9 +7,9 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务直播视频检测接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v2/livevideo/submit");
+define("API_URL", "https://as.dun.163yun.com/v3/livevideo/submit");
 /** api version */
-define("VERSION", "v2");
+define("VERSION", "v3");
 /** API timeout*/
 define("API_TIMEOUT", 1);
 /** php内部使用的字符串编码 */
@@ -53,7 +53,7 @@ function check($params){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);
@@ -82,15 +82,22 @@ function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$params = array(
 		"dataId"=>"fbfcad1c-dba1-490c-b4de-e784c2691765",
-		"url"=>"http://xxx.xxx.com/xxxx",
-		"callback"=>"{\"p\":\"xx\"}",
+		"url"=>"http://xxx.xxx.com/xxxx"
+		// "callback"=>"{\"p\":\"xx\"}",
 	);
 
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
-		echo "result = $result";
+		// status 0:成功，1:失败
+		$status = $result["status"];
+        $taskId = $result["taskId"];
+        if ($status == 0) {
+            echo "提交成功，taskId={$taskId}";
+        } else {
+            echo "提交失败，taskId={$taskId}";
+        }
     }else{
     	var_dump($ret);
     }

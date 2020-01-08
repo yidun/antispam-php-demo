@@ -7,9 +7,9 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务音频检测结果获取接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v1/audio/callback/results");
+define("API_URL", "https://as.dun.163yun.com/v3/audio/callback/results");
 /** api version */
-define("VERSION", "v1");
+define("VERSION", "v3.1");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -54,7 +54,7 @@ function check(){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);
@@ -87,22 +87,29 @@ function main(){
 	var_dump($ret);
 
 	if ($ret["code"] == 200) {
-		$result_array = $ret["result"];
+		$result_array = $ret["antispam"];
 		foreach($result_array as $res_index => $result){
 		    $taskId = $result["taskId"];
-			$action = $result["action"];
-            $label_array = $result["labels"];
-            /*foreach($label_array as $label_index => $labelInfo){
-                $label = $labelInfo["label"];
-                $level = $labelInfo["level"];
-                $detailsObject = $labelInfo["details"];
-                $hint_array = $detailsObject["hint"];
-            }*/
-            if ($action == 0) {
-                echo "结果：通过，taskId=".$taskId;
-            } else if ($action == 2) {
-                echo "结果：不通过，taskId=".$taskId;
-            }
+		    $asrStatus = $result["asrStatus"];
+		    if($asrStatus == 4) {
+                $asrResult = $result["asrResult"];
+                echo "检测失败: taskId={$taskId}, asrResult={$asrResult}";
+		    } else {
+                $action = $result["action"];
+                $label_array = $result["labels"];
+                // 证据信息如下
+                /*foreach($label_array as $label_index => $labelInfo){
+                    $label = $labelInfo["label"];
+                    $level = $labelInfo["level"];
+                    $detailsObject = $labelInfo["details"];
+                    $hint_array = $detailsObject["hint"];
+                }*/
+                if ($action == 0) {
+                    echo "结果：通过，taskId=".$taskId;
+                } else if ($action == 2) {
+                    echo "结果：不通过，taskId=".$taskId;
+                }
+		    }
 		}
     }else{
     	var_dump($ret);

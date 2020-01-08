@@ -53,7 +53,7 @@ function check($params){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
-	$params["timestamp"] = sprintf("%d", round(microtime(true)*1000));// time in milliseconds
+	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
 	$params = toUtf8($params);
@@ -82,8 +82,8 @@ function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$params = array(
 		"dataId"=>"fbfcad1c-dba1-490c-b4de-e784c2691765",
-		"url"=>"http://xxx.xxx.com/xxxx",
-		"callback"=>"{\"p\":\"xx\"}",
+		"url"=>"http://xxx.xxx.com/xxxx"
+		// "callback"=>"{\"p\":\"xx\"}",
 	);
 
 	$ret = check($params);

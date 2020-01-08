@@ -5,8 +5,8 @@ define("SECRETID", "your_secret_id");
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务文本結果查詢接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v1/text/query/task");
+/** 易盾反垃圾云服务直播视频查询接口地址 */
+define("API_URL", "https://as.dun.163yun.com/v1/livevideo/query/task");
 /** api version */
 define("VERSION", "v1");
 /** API timeout*/
@@ -60,15 +60,16 @@ function check($params){
 	// var_dump($params);
 
 	$options = array(
-	    'http' => array(
-	        'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-	        'method'  => 'POST',
-	        'timeout' => API_TIMEOUT, // read timeout in seconds
-	        'content' => http_build_query($params),
+	    "http" => array(
+	        "header"  => "Content-type: application/x-www-form-urlencoded\r\n",
+	        "method"  => "POST",
+	        "timeout" => API_TIMEOUT, // read timeout in seconds
+	        "content" => http_build_query($params),
 	    ),
 	);
 	$context  = stream_context_create($options);
 	$result = file_get_contents(API_URL, false, $context);
+	// var_dump($result);
 	if($result === FALSE){
 		return array("code"=>500, "msg"=>"file_get_contents failed.");
 	}else{
@@ -79,31 +80,32 @@ function check($params){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
-	$taskIds = array("c679d93d4a8d411cbe3454214d4b1fd7","49800dc7877f4b2a9d2e1dec92b988b6");
+	$taskIds = array("202b1d65f5854cecadcb24382b681c1a","0f0345933b05489c9b60635b0c8cc721");
 	$params = array(
 		"taskIds"=>json_encode($taskIds)
 	);
+	var_dump($params);
 
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
-		foreach($result as $index => $value){
-		    $action = $value["action"];
-		    $taskId = $value["taskId"];
-		    $status = $value["status"];
-		    $callback = $value["callback"];
-		    $labelArray = $value["labels"];
-		    if ($action == 0) {
-			echo "taskId={$taskId}，status={$status}，callback={$callback}，文本查询结果：通过\n";
-		    } else if ($action == 2) {
-			echo "taskId={$taskId}，status={$status}，callback={$callback}，文本查询结果：不通过，分类信息如下：".json_encode($labelArray)."\n";
-	            }
+		// var_dump($array);
+		foreach($result as $index => $live_ret){
+		    // 直播视频唯一id
+		    $taskId = $live_ret["taskId"];
+		    // 直播状态, 101:直播中，102：直播结束
+		    $status = $live_ret["status"];
+		    // 回调标识
+		    $callback = $live_ret["callback"];
+		    // 直播检测状态(0:检测成功，10：检测中，110：请求重复，120：参数错误，130：解析错误，140：数据类型错误，150：并发超限)
+		    $callbackStatus = $live_ret["callbackStatus"];
+		    // 过期状态（20:直播不是七天内的数据，30：直播taskId不存在）
+		    $expireStatus = $live_ret["expireStatus"];
 		}
-    	}else{
-    		var_dump($ret); // error handler
-    	}
+    }else{
+    	var_dump($ret);
+    }
 }
-
 main();
 ?>
