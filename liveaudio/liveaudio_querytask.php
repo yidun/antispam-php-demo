@@ -6,10 +6,10 @@ define("SECRETID", "your_secret_id");
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务音频检测结果获取接口地址 */
-define("API_URL", "https://as-liveaudio.dun.163yun.com/v1/liveaudio/callback/results");
+/** 调用易盾反垃圾云服务查询直播语音片段离线结果接口API示例 */
+define("API_URL", "https://as-liveaudio.dun.163yun.com/v1/liveaudio/query/task");
 /** api version */
-define("VERSION", "v1.1");
+define("VERSION", "v1.0");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 /** php内部使用的字符串编码 */
@@ -54,6 +54,9 @@ function check(){
 	$params["secretId"] = SECRETID;
 	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
+	$params["taskId"] = "xxx";
+	$params["startTime"] = "1578326400000";
+	$params["endTime"] = "1578327000000";// 10min limit
 	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
@@ -93,21 +96,17 @@ function main(){
 			$action = $result["action"];
             $segment_array = $result["segments"];
             $asrStatus = $result["asrStatus"];
-            if ($asrStatus == 4) {
-                echo "检测失败，taskId=".$taskId;
-            } else {
-                $startTime = $result["startTime"];
-                $endTime = $result["endTime"];
-                // 证据信息如下
-                /*foreach($segment_array as $label_index => $segmentsInfo){
-                    $label = $segmentsInfo["label"];
-                    $level = $segmentsInfo["level"];
-                }*/
-                if ($action == 0) {
-                    echo "结果：通过，taskId=".$taskId + "startTime:".$startTime + "endTime:".$endTime;
-                } else if ($action == 2) {
-                    echo "结果：不通过，taskId=".$taskId + "startTime:".$startTime + "endTime:".$endTime;
-                }
+            $startTime = $result["startTime"];
+            $endTime = $result["endTime"];
+            // 证据信息如下
+            /*foreach($segment_array as $label_index => $segmentsInfo){
+                $label = $segmentsInfo["label"];
+                $level = $segmentsInfo["level"];
+            }*/
+            if ($action == 0) {
+                echo "结果：通过，taskId=".$taskId + "startTime:".$startTime + "endTime:".$endTime;
+            } else if ($action == 2) {
+                echo "结果：不通过，taskId=".$taskId + "startTime:".$startTime + "endTime:".$endTime;
             }
 		}
     }else{
