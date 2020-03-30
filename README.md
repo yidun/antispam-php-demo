@@ -5,6 +5,10 @@ http://dun.163.com
 - 文件说明
 
 ```
+├── list 名单添加接口演示
+│   └── list_submit.php 名单添加
+├── keyword 敏感词添加接口演示
+│   └── keyword_submit.php 敏感词添加
 ├── audio 点播语音接口演示
 │   ├── audio_callback.php 点播语音结果获取
 │   └── audio_check.php 点播语音提交
