@@ -7,9 +7,9 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务直播音频检测接口地址 */
-define("API_URL", "https://as-liveaudio.dun.163yun.com/v1/liveaudio/check");
+define("API_URL", "http://as-liveaudio.dun.163yun.com/v2/liveaudio/check");
 /** api version */
-define("VERSION", "v1.1");
+define("VERSION", "v2");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");

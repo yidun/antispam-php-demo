@@ -5,7 +5,7 @@ define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 易盾反垃圾云服务直播音视频解决方案结果获取接口地址 */
-define("API_URL", "https://as.dun.163yun.com/v2/livewallsolution/callback/results");
+define("API_URL", "http://as.dun.163yun.com/v2/livewallsolution/callback/results");
 /** api version */
 define("VERSION", "v2");
 /** API timeout*/
