@@ -23,6 +23,9 @@ http://dun.163.com
 ├── videosolution 点播音视频解决方案接口演示
 │   ├── videosolution_callback.php 点播音视频解决方案结果获取
 │   └── videosolution_check.php 点播音视频解决方案提交
+├── crawlersolution 网站检测解决方案接口演示
+│   ├── crawersolution_callback.php 网站检测解决方案结果获取
+│   └── crawersolution_submit.php 网站检测解决方案提交
 ├── image 图片接口演示
 │   ├── callback.php 图片回调
 │   └── check.php 图片检测
@@ -32,6 +35,7 @@ http://dun.163.com
 │   ├── livevideo_callback.php 直播视频流结果获取
 │   ├── livevideo_check.php 直播视频流提交
 │   ├── livevideo_query.php 直播视频流taskId查询
+│   ├── livedata_query.php 直播截图taskId查询
 │   ├── livewall_callback.php 直播电视墙回调
 │   ├── livewall_check.php 直播电视墙回调流提交
 │   ├── video_callback.php 视频结果获取
