@@ -6,8 +6,8 @@ define("SECRETID", "your_secret_id");
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务敏感词添加接口地址 */
-define("API_URL", "http://as.dun.163yun.com/v1/keyword/submit");
+/** 易盾反垃圾云服务敏感词删除接口地址 */
+define("API_URL", "http://as.dun.163yun.com/v1/keyword/delete");
 /** api version */
 define("VERSION", "v1");
 /** API timeout*/
@@ -40,19 +40,16 @@ function check($params){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
-    $keywords = array("色情敏感词1","色情敏感词2");
+    $ids = array("1","2");
 	$params = array(
-	    // 100: 色情，110: 性感，200: 广告，210: 二维码，300: 暴恐，400: 违禁，500: 涉政，600: 谩骂，700: 灌水
-		"category"=>"100",
-		"keywords"=>implode(",",$keywords)
+	    // 敏感词id数组，用逗号分隔
+		"ids"=>implode(",",$ids)
 	);
 
 	$ret = check($params);
 	var_dump($ret);
-	if ($ret["code"] == 200) {
-	    // 敏感词结果数组
-	    $resultArray = $ret["result"];
-        echo "提交成功";
+	if ($ret["code"] == 200 && $ret["result"]) {
+        echo "删除成功";
     }else{
     	var_dump($ret);
     }
