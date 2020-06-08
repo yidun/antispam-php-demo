@@ -7,7 +7,7 @@ define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务直播视频检测接口地址 */
-define("API_URL", "http://as.dun.163yun.com/v3/livevideo/submit");
+define("API_URL", "http://as.dun.163.com/v3/livevideo/submit");
 /** api version */
 define("VERSION", "v3");
 /** API timeout*/
