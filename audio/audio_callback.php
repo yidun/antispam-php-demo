@@ -55,6 +55,8 @@ function main(){
                 echo "检测失败: taskId={$taskId}, asrResult={$asrResult}";
 		    } else {
                 $action = $result["action"];
+                // 音频数据所在断句详细信息
+                $segments_array = $result["segments"];
                 $label_array = $result["labels"];
                 // 证据信息如下
                 /*foreach($label_array as $label_index => $labelInfo){

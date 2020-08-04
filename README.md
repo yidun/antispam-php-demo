@@ -24,6 +24,10 @@ http://dun.163.com
 ├── videosolution 点播音视频解决方案接口演示
 │   ├── videosolution_callback.php 点播音视频解决方案结果获取
 │   └── videosolution_check.php 点播音视频解决方案提交
+│   └── videosolution_query.php 点播音视频taskId查询
+├── mediasolution 融媒体解决方案接口演示
+│   ├── mediasolution_callback.php 融媒体解决方案结果获取
+│   └── mediasolution_check.php 融媒体解决方案提交
 ├── crawlersolution 网站检测解决方案接口演示
 │   ├── crawersolution_callback.php 网站检测解决方案结果获取
 │   └── crawersolution_submit.php 网站检测解决方案提交
@@ -42,6 +46,7 @@ http://dun.163.com
 │   ├── video_callback.php 视频结果获取
 │   └── video_check.php 视频流提交
 │   └── video_query.php 视频流taskId查询
+│   └── videodata_query.php 视频截图taskId查询
 └── text 文本接口演示
     ├── submit.php 文本数据抄送
     ├── query.php 文本taskId查询
