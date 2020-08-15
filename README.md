@@ -51,7 +51,8 @@ http://dun.163.com
     ├── submit.php 文本数据抄送
     ├── query.php 文本taskId查询
     ├── callback.php 文本回调
-    └── check.php 文本检测
+    ├── check.php 文本检测
+    └── batch_check.php 文本批量检测
     
 ```
 
