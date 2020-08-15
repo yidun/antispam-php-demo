@@ -9,7 +9,7 @@ define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务音频检测结果获取接口地址 */
 define("API_URL", "http://as.dun.163.com/v3/audio/callback/results");
 /** api version */
-define("VERSION", "v3.1");
+define("VERSION", "v3.2");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
