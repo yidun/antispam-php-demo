@@ -8,8 +8,8 @@ define("SECRETKEY", "your_secret_key");
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务音频检测结果获取接口地址 */
 define("API_URL", "http://as.dun.163.com/v3/audio/callback/results");
-/** api version */
-define("VERSION", "v3.2");
+/** 点播语音版本v3.2及以上二级细分类结构进行调整 */
+define("VERSION", "v3.3");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
@@ -62,9 +62,6 @@ function main(){
                 /*foreach($label_array as $label_index => $labelInfo){
                     $label = $labelInfo["label"];
                     $level = $labelInfo["level"];
-                    $detailsObject = $labelInfo["details"];
-                    $hint_array = $detailsObject["hint"];
-                    $subLabels = $detailsObject["subLabels"];
                 }*/
                 if ($action == 0) {
                     echo "结果：通过，taskId=".$taskId;

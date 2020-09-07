@@ -8,8 +8,8 @@ define("SECRETKEY", "your_secret_key");
 define("BUSINESSID", "your_business_id");
 /** 易盾反垃圾云服务音频检测接口地址 */
 define("API_URL", "http://as.dun.163.com/v3/audio/submit");
-/** api version */
-define("VERSION", "v3.2");
+/** 点播语音版本v3.2及以上二级细分类结构进行调整 */
+define("VERSION", "v3.3");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
