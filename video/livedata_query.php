@@ -1,15 +1,14 @@
 <?php
-/** 音频提交检测接口 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 业务ID，易盾根据产品业务特点分配 */
 define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务音频taskId查询接口地址 */
-define("API_URL", "http://as.dun.163.com/v3/audio/query/task");
+/** 易盾反垃圾云服务直播视频截图结果查询接口地址 */
+define("API_URL", "http://as.dun.163.com/v1/livevideo/query/image");
 /** api version */
-define("VERSION", "v3");
+define("VERSION", "v1");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
@@ -41,21 +40,30 @@ function check($params){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
-	$taskIds = array("202b1d65f5854cecadcb24382b681c1a","0f0345933b05489c9b60635b0c8cc721");
 	$params = array(
-		"taskIds"=>json_encode($taskIds)
-	);
+        // 直播taskId
+        "taskId"=>"c633a8cb6d45497c9f4e7bd6d8218443",
+        // 截图级别，1 嫌疑 2 删除确定
+        "levels"=>"[1,2]",
+        // 回调状态，1 待回调
+        "callbackStatus"=>1,
+        "pageNum"=>1,
+        "pageSize"=>10
+    );
 	var_dump($params);
 
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
-	    // 反垃圾结果
-		$antispamArray = $ret["antispam"];
-		// 语种结果
-        $languageArray = $ret["language"];
-        // 语音翻译结果
-        $asrArray = $ret["asr"];
+		$result = $ret["result"];
+		// 状态
+        $status = $result["status"];
+        // 截图结果
+        $images = $result["images"];
+        // 截图总数
+        $count = $images["count"];
+        // 截图详情
+        $rows = $images["rows"];
     }else{
     	var_dump($ret);
     }

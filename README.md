@@ -5,6 +5,11 @@ http://dun.163.com
 - 文件说明
 
 ```
+├── list 名单添加接口演示
+│   └── list_submit.php 名单添加
+├── keyword 敏感词添加接口演示
+│   └── keyword_submit.php 敏感词添加
+│   └── keyword_delete.php 敏感词删除
 ├── audio 点播语音接口演示
 │   ├── audio_callback.php 点播语音结果获取
 │   └── audio_check.php 点播语音提交
@@ -19,6 +24,13 @@ http://dun.163.com
 ├── videosolution 点播音视频解决方案接口演示
 │   ├── videosolution_callback.php 点播音视频解决方案结果获取
 │   └── videosolution_check.php 点播音视频解决方案提交
+│   └── videosolution_query.php 点播音视频taskId查询
+├── mediasolution 融媒体解决方案接口演示
+│   ├── mediasolution_callback.php 融媒体解决方案结果获取
+│   └── mediasolution_check.php 融媒体解决方案提交
+├── crawlersolution 网站检测解决方案接口演示
+│   ├── crawersolution_callback.php 网站检测解决方案结果获取
+│   └── crawersolution_submit.php 网站检测解决方案提交
 ├── image 图片接口演示
 │   ├── callback.php 图片回调
 │   └── check.php 图片检测
@@ -28,16 +40,19 @@ http://dun.163.com
 │   ├── livevideo_callback.php 直播视频流结果获取
 │   ├── livevideo_check.php 直播视频流提交
 │   ├── livevideo_query.php 直播视频流taskId查询
+│   ├── livedata_query.php 直播截图taskId查询
 │   ├── livewall_callback.php 直播电视墙回调
 │   ├── livewall_check.php 直播电视墙回调流提交
 │   ├── video_callback.php 视频结果获取
 │   └── video_check.php 视频流提交
 │   └── video_query.php 视频流taskId查询
+│   └── videodata_query.php 视频截图taskId查询
 └── text 文本接口演示
     ├── submit.php 文本数据抄送
     ├── query.php 文本taskId查询
     ├── callback.php 文本回调
-    └── check.php 文本检测
+    ├── check.php 文本检测
+    └── batch_check.php 文本批量检测
     
 ```
 

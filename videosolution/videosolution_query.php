@@ -1,15 +1,12 @@
 <?php
-/** 音频提交检测接口 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
-/** 业务ID，易盾根据产品业务特点分配 */
-define("BUSINESSID", "your_business_id");
-/** 易盾反垃圾云服务音频taskId查询接口地址 */
-define("API_URL", "http://as.dun.163.com/v3/audio/query/task");
+/** 易盾反垃圾云服务点播音视频解决方案查询接口地址 */
+define("API_URL", "http://as.dun.163.com/v1/videosolution/query/task");
 /** api version */
-define("VERSION", "v3");
+define("VERSION", "v1");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
@@ -20,7 +17,6 @@ require("../util.php");
  */
 function check($params){
 	$params["secretId"] = SECRETID;
-	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
 	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
@@ -50,12 +46,17 @@ function main(){
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
-	    // 反垃圾结果
-		$antispamArray = $ret["antispam"];
-		// 语种结果
-        $languageArray = $ret["language"];
-        // 语音翻译结果
-        $asrArray = $ret["asr"];
+		$result_array = $ret["result"];
+        foreach($result_array as $res_index => $resultInfo){
+            $taskId = $resultInfo["taskId"];
+            $status = $resultInfo["status"];
+            $result = $resultInfo["result"];
+            // 人审证据信息
+            $reviewEvidencesObject = $resultInfo["reviewEvidences"];
+            // 证据信息
+            $evidencesObject = $resultInfo["evidences"];
+            echo "音视频结果结果：taskId={$taskId}：status={$status}：result={$result}";
+        }
     }else{
     	var_dump($ret);
     }
