@@ -1,6 +1,9 @@
 <?php
 /** php内部使用的字符串编码 */
 define("INTERNAL_STRING_CHARSET", "auto");
+/** api signatureMethod,默认MD5,支持国密SM3 */
+define("SIGNATURE_METHOD", "MD5");
+require 'vendor/autoload.php';
 
 /**
  * curl post请求
@@ -40,6 +43,7 @@ function toUtf8($params){
  * $secretKey secretKey
  */
 function gen_signature($secretKey, $params){
+    $params["signatureMethod"] == SIGNATURE_METHOD;
 	ksort($params);
 	$buff="";
 	foreach($params as $key=>$value){
@@ -50,5 +54,10 @@ function gen_signature($secretKey, $params){
 	}
 	$buff .= $secretKey;
 	return md5($buff);
+    if ($params["signatureMethod"] == "SM3") {
+        return sm3($buff);
+    } else {
+        return md5($buff);
+    }
 }
 ?>
