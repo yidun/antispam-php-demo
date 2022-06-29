@@ -1,15 +1,17 @@
 <?php
-/** 网站检测解决方案 任务检测提交接口V1 API */
+/** 调用易盾反垃圾云服务视频信息提交接口API示例 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
+/** 业务ID，易盾根据产品业务特点分配 */
+define("BUSINESSID", "your_business_id");
 /** 接口地址 */
-define("API_URL", "http://as.dun.163.com/v1/crawler/job/submit");
+define("API_URL", "http://as.dun.163.com/v4/video/submit");
 /** api version */
-define("VERSION", "v1.0");
+define("VERSION", "v4");
 /** API timeout*/
-define("API_TIMEOUT", 10);
+define("API_TIMEOUT", 1);
 require("../util.php");
 
 /**
@@ -18,6 +20,7 @@ require("../util.php");
  */
 function check($params){
 	$params["secretId"] = SECRETID;
+	$params["businessId"] = BUSINESSID;
 	$params["version"] = VERSION;
 	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
@@ -38,26 +41,26 @@ function check($params){
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$params = array(
-		// 主站URL
-		"siteUrl" => "http://xxx.com",
-		"dataId" => "6a7c754f9de34eb8bfdf03f209fcfc02",
-		//  爬虫深度/网站层级
-		"level" => "1,3",
-		// 单次任务周期内爬取页面的最大数量
-		"maxResourceAmount" => "1000",
-		// 任务类型
-		"type" => "1",
-		// 回调接口地址
-		"callbackUrl" => "主动将结果推送给调用方的接口"
+		"dataId"=>"fbfcad1c-dba1-490c-b4de-e784c2691765",
+		"url"=>"http://xxx.xxx.com/xxxx"
+		// "callback"=>"{\"p\":\"xx\"}",
+		// "scFrequency"=>"5",
 	);
 
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
-        $dataId = $result["dataId"];
-        $jobId = $result["jobId"];
-        echo "提交成功，jobId={$jobId},dataId={$dataId}";
+		// status 0:成功，1:失败
+		$status = $result["status"];
+		$taskId = $result["taskId"];
+		// 缓冲池排队待处理数据量
+		$dealingCount = $result["dealingCount"];
+		if($status === 0){
+			echo "SUBMIT SUCCESS: taskId={$taskId}, dealingCount = {$dealingCount}";
+		}else{
+			echo "提交失败，taskId=".$taskId;
+		}
     }else{
     	var_dump($ret);
     }

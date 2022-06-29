@@ -1,13 +1,13 @@
 <?php
-/** 网站检测解决方案 任务检测提交接口V1 API */
+/** 易盾反垃圾云服务网站检测解决方案提交接口V3 API实例 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 接口地址 */
-define("API_URL", "http://as.dun.163.com/v1/crawler/job/submit");
+define("API_URL", "http://as.dun.163.com/v3/crawler/submit");
 /** api version */
-define("VERSION", "v1.0");
+define("VERSION", "v3.0");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
@@ -38,26 +38,23 @@ function check($params){
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$params = array(
-		// 主站URL
-		"siteUrl" => "http://xxx.com",
-		"dataId" => "6a7c754f9de34eb8bfdf03f209fcfc02",
-		//  爬虫深度/网站层级
-		"level" => "1,3",
-		// 单次任务周期内爬取页面的最大数量
-		"maxResourceAmount" => "1000",
-		// 任务类型
-		"type" => "1",
-		// 回调接口地址
-		"callbackUrl" => "主动将结果推送给调用方的接口"
+		"dataId"=>"6a7c754f9de34eb8bfdf03f209fcfc02",
+		"callback"=>"34eb8bfdf03f209fcfc02",
+		"url"=>"http://xxx.com",
+		// 多个检测项时用英文逗号分隔
+		"checkFlags"=>"1,2",
+		// 回调地址。调用方用来接收易盾主动回调结果的api地址
+		"callbackUrl"=>"http://xxx"
 	);
+
 
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
         $dataId = $result["dataId"];
-        $jobId = $result["jobId"];
-        echo "提交成功，jobId={$jobId},dataId={$dataId}";
+        $taskId = $result["taskId"];
+        echo "提交成功，taskId={$taskId},dataId={$dataId}";
     }else{
     	var_dump($ret);
     }

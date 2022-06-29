@@ -1,13 +1,13 @@
 <?php
-/** 网站检测解决方案 任务检测提交接口V1 API */
+/** 文档解决方案提交检测接口v2 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 接口地址 */
-define("API_URL", "http://as.dun.163.com/v1/crawler/job/submit");
+define("API_URL", "http://as-file.dun.163.com/v2/file/submit");
 /** api version */
-define("VERSION", "v1.0");
+define("VERSION", "v2.0");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
@@ -38,17 +38,13 @@ function check($params){
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
 	$params = array(
-		// 主站URL
-		"siteUrl" => "http://xxx.com",
-		"dataId" => "6a7c754f9de34eb8bfdf03f209fcfc02",
-		//  爬虫深度/网站层级
-		"level" => "1,3",
-		// 单次任务周期内爬取页面的最大数量
-		"maxResourceAmount" => "1000",
-		// 任务类型
-		"type" => "1",
-		// 回调接口地址
-		"callbackUrl" => "主动将结果推送给调用方的接口"
+		"url"=>"http://xxx.xxx.com/xxxx",
+		"dataId"=>"xxx",
+		// "dataType"=>"1",
+		// "checkFlag"=>"3",
+		// "ip"=>"123.115.77.137",
+		// "account"=>"java@163.com",
+		// "callback"=>"ebfcad1c-dba1-490c-b4de-e784c2691768"
 	);
 
 	$ret = check($params);
@@ -56,8 +52,8 @@ function main(){
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
         $dataId = $result["dataId"];
-        $jobId = $result["jobId"];
-        echo "提交成功，jobId={$jobId},dataId={$dataId}";
+        $taskId = $result["taskId"];
+        echo "提交成功，taskId={$taskId},dataId={$dataId}";
     }else{
     	var_dump($ret);
     }

@@ -1,13 +1,13 @@
 <?php
-/** 网站检测解决方案 任务检测提交接口V1 API */
+/** 数字阅读解决方案检测提交接口API示例-v2版本 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 接口地址 */
-define("API_URL", "http://as.dun.163.com/v1/crawler/job/submit");
+define("API_URL", "http://as.dun.163.com/v2/digital/submit");
 /** api version */
-define("VERSION", "v1.0");
+define("VERSION", "v2");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
@@ -37,27 +37,35 @@ function check($params){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
+	// 设置私有参数
+	$jsonArray = array();
+	// 作品文本内容
+	array_push($jsonArray, array(
+		"type" => "text",
+		"data" => "文章文本内容",
+		"dataId" => "0001"
+	));
+	// 作品图片内容
+	array_push($jsonArray, array(
+		"type" => "image",
+		"data" => "http://xxx.jpg",
+		"dataId" => "0002"
+	));
 	$params = array(
-		// 主站URL
-		"siteUrl" => "http://xxx.com",
-		"dataId" => "6a7c754f9de34eb8bfdf03f209fcfc02",
-		//  爬虫深度/网站层级
-		"level" => "1,3",
-		// 单次任务周期内爬取页面的最大数量
-		"maxResourceAmount" => "1000",
-		// 任务类型
-		"type" => "1",
-		// 回调接口地址
-		"callbackUrl" => "主动将结果推送给调用方的接口"
+		"bookId"=>"book0001",
+		"type"=>"1",
+		"callback"=>"i am callback",
+		"bookInformation"=>json_encode($jsonArray)
 	);
 
 	$ret = check($params);
 	var_dump($ret);
 	if ($ret["code"] == 200) {
 		$result = $ret["result"];
-        $dataId = $result["dataId"];
-        $jobId = $result["jobId"];
-        echo "提交成功，jobId={$jobId},dataId={$dataId}";
+		$antispam = $ret["antispam"];
+		$dataId = $antispam["dataId"];
+		$taskId = $antispam["taskId"];
+		echo "SUBMIT SUCCESS: taskId={$taskId}, dataId={$dataId}%n";
     }else{
     	var_dump($ret);
     }

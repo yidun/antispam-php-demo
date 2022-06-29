@@ -1,13 +1,13 @@
 <?php
-/** 网站检测解决方案 任务检测提交接口V1 API */
+/** 名单删除接口 */
 /** 产品密钥ID，产品标识 */
 define("SECRETID", "your_secret_id");
 /** 产品私有密钥，服务端生成签名信息使用，请严格保管，避免泄露 */
 define("SECRETKEY", "your_secret_key");
 /** 接口地址 */
-define("API_URL", "http://as.dun.163.com/v1/crawler/job/submit");
+define("API_URL", "http://as.dun.163.com/v2/list/batchDelete");
 /** api version */
-define("VERSION", "v1.0");
+define("VERSION", "v2");
 /** API timeout*/
 define("API_TIMEOUT", 10);
 require("../util.php");
@@ -37,27 +37,19 @@ function check($params){
 // 简单测试
 function main(){
     echo "mb_internal_encoding=".mb_internal_encoding()."\n";
+    $lists = array("用户黑名单1","用户黑名单2");
 	$params = array(
-		// 主站URL
-		"siteUrl" => "http://xxx.com",
-		"dataId" => "6a7c754f9de34eb8bfdf03f209fcfc02",
-		//  爬虫深度/网站层级
-		"level" => "1,3",
-		// 单次任务周期内爬取页面的最大数量
-		"maxResourceAmount" => "1000",
-		// 任务类型
-		"type" => "1",
-		// 回调接口地址
-		"callbackUrl" => "主动将结果推送给调用方的接口"
+	    // 1: 白名单，2: 黑名单，4: 必审名单，8: 预审名单
+		"listType"=>"2",
+		// 1: 用户名单，2: IP名单
+		"entityType"=>"1",
+		"entities"=>implode(",",$lists)
 	);
 
 	$ret = check($params);
 	var_dump($ret);
-	if ($ret["code"] == 200) {
-		$result = $ret["result"];
-        $dataId = $result["dataId"];
-        $jobId = $result["jobId"];
-        echo "提交成功，jobId={$jobId},dataId={$dataId}";
+	if ($ret["code"] == 200 && $ret["result"]) {
+		echo "SUCCESS: result={$ret["result"]}";
     }else{
     	var_dump($ret);
     }
