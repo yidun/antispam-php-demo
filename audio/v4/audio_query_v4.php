@@ -57,15 +57,14 @@ function main()
             // 反垃圾检测结果
             $antispam = $audio_ret["antispam"];
             if ($antispam != null) {
-                $name = $antispam["name"];
                 $taskId = $antispam["taskId"];
-                // 检测状态，2-检测成功，3-检测失败
+                // status任务状态， 0：正常，1：已过期，2：数据不存在，3：检测中
                 $status = $antispam["status"];
                 if ($status == 2) {
                     // 建议结果 0-通过 1-嫌疑 2-删除
                     $suggestion = $antispam["suggestion"];
                     $labelArray = $antispam["labels"];
-                    echo "taskId={$taskId}，name={$name}，suggestion={$suggestion}\n";
+                    echo "taskId={$taskId}，suggestion={$suggestion}\n";
                     foreach ($labelArray as $index => $label) {
                         // subLabels为二级分类数组，根据需要解析
                         $subLabels = $label["subLabels"];
@@ -79,7 +78,7 @@ function main()
                         echo "#机器检测结果：最高等级为：确定\n";
                     }
                 } else {
-                    echo "检测失败,taskId:{$taskId}, status={$status}, name={$name}\n";
+                    echo "检测失败,taskId:{$taskId}, status={$status}\n";
                 }
             }
             // 语种检测数据
