@@ -43,7 +43,7 @@ function toUtf8($params){
  * $secretKey secretKey
  */
 function gen_signature($secretKey, $params){
-    $params["signatureMethod"] == SIGNATURE_METHOD;
+    $params["signatureMethod"] = SIGNATURE_METHOD;
 	ksort($params);
 	$buff="";
 	foreach($params as $key=>$value){
@@ -54,10 +54,10 @@ function gen_signature($secretKey, $params){
 	}
 	$buff .= $secretKey;
 	return md5($buff);
-    if ($params["signatureMethod"] == "SM3") {
-        return sm3($buff);
-    } else {
-        return md5($buff);
-    }
+//    if ($params["signatureMethod"] == "SM3") {
+//        return sm3($buff);
+//    } else {
+//        return md5($buff);
+//    }
 }
 ?>
