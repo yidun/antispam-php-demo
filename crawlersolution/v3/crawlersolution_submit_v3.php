@@ -10,7 +10,7 @@ define("API_URL", "http://as.dun.163.com/v3/crawler/submit");
 define("VERSION", "v3.0");
 /** API timeout*/
 define("API_TIMEOUT", 10);
-require("../util.php");
+require("../../util.php");
 
 /**
  * 反垃圾请求接口简单封装
@@ -22,6 +22,7 @@ function check($params){
 	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
+	$params["signatureMethod"] = SIGNATURE_METHOD;
 	$params = toUtf8($params);
 	$params["signature"] = gen_signature(SECRETKEY, $params);
 	// var_dump($params);
