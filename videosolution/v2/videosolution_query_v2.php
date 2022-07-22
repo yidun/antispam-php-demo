@@ -21,6 +21,7 @@ function check($params)
     $params["version"] = VERSION;
     $params["timestamp"] = time() * 1000;// time in milliseconds
     $params["nonce"] = sprintf("%d", rand()); // random int
+    $params["signatureMethod"] = SIGNATURE_METHOD;
 
     $params = toUtf8($params);
     $params["signature"] = gen_signature(SECRETKEY, $params);

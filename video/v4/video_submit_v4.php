@@ -12,7 +12,7 @@ define("API_URL", "http://as.dun.163.com/v4/video/submit");
 define("VERSION", "v4");
 /** API timeout*/
 define("API_TIMEOUT", 1);
-require("../util.php");
+require("../../util.php");
 
 /**
  * 反垃圾请求接口简单封装
@@ -25,6 +25,7 @@ function check($params){
 	$params["timestamp"] = time() * 1000;// time in milliseconds
 	$params["nonce"] = sprintf("%d", rand()); // random int
 
+	$params["signatureMethod"] = SIGNATURE_METHOD;
 	$params = toUtf8($params);
 	$params["signature"] = gen_signature(SECRETKEY, $params);
 	// var_dump($params);

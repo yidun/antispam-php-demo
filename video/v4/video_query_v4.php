@@ -11,7 +11,7 @@ define("API_URL", "http://as.dun.163.com/v4/video/query/task");
 define("VERSION", "v4");
 /** API timeout*/
 define("API_TIMEOUT", 10);
-require("../util.php");
+require("../../util.php");
 
 /**
  * 反垃圾请求接口简单封装
