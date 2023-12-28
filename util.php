@@ -19,8 +19,43 @@ function curl_post($params, $url, $timout){
     curl_setopt($ch, CURLOPT_POST, 1);
     // 把post的变量加上
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:'.'application/x-www-form-urlencoded; charset=UTF-8'));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded; charset=UTF-8'));
     $output = curl_exec($ch);
+    curl_close($ch);
+    return $output;
+}
+
+/**
+ * curl get请求
+ * @params 输入的参数
+ */
+function curl_get_set_header($params, $url, $timeout, $headersMap){
+    $queryString = http_build_query($params);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url . "?" . $queryString);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    // 本地调式使用，生产环境建议不推荐禁用SSL证书验证
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 不验对等证书
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // 不验证证书中的主机名
+    // 设置超时时间
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    // 确认 HTTP 请求方法为 GET，这行可以省略，因为 cURL 默认就是 GET
+    curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    $headers = [];
+    foreach ($headersMap as $key => $value) {
+        $headers[] = "$key: $value";
+    }
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    $output = curl_exec($ch);
+
+    // 检查是否有错误发生
+    if(curl_errno($ch)){
+        // 可以选择记录或返回错误信息
+        $output = 'Curl error: ' . curl_error($ch);
+    }
+    echo "output:{$output}";
+
     curl_close($ch);
     return $output;
 }
@@ -58,5 +93,34 @@ function gen_signature($secretKey, $params){
 //    } else {
 //        return md5($buff);
 //    }
+}
+
+function genOpenApiSignature($secretKey, $params, $header) {
+    // 1. 参数名按照ASCII码表升序排序
+    $paramNames = array_keys($params);
+    sort($paramNames);
+
+    // 从header中取得timestamp和nonce
+    $timestamp = $header["X-YD-TIMESTAMP"];
+    $nonce = $header["X-YD-NONCE"];
+
+    // 2. 按照排序拼接参数名与参数值
+    $paramBuffer = "";
+    foreach ($paramNames as $paramName) {
+        $paramValue = $params[$paramName];
+        $paramBuffer .= $paramName . ($paramValue ?? "");
+    }
+
+    // 3. 将secretKey，nonce，timestamp拼接到最后
+    $paramBuffer .= $secretKey . $nonce . $timestamp;
+
+    try {
+        // 使用SHA-1算法计算散列值
+        return sha1($paramBuffer);
+    } catch (Exception $e) {
+        // 错误处理
+        error_log("[ERROR] not supposed to happen: " . $e->getMessage());
+    }
+    return "";
 }
 ?>
