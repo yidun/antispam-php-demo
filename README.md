@@ -53,7 +53,9 @@ http://dun.163.com
     ├── callback.php 文本回调
     ├── check.php 文本检测
     └── batch_check.php 文本批量检测
-    
+└── aigc aigc解决方案接口演示
+    ├── check.php aigc文本流式检测
+    └── callback.php aigc文本流式检测结果获取
 ```
 
 ## 使用说明
