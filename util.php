@@ -4,25 +4,15 @@ define("INTERNAL_STRING_CHARSET", "auto");
 /** api signatureMethod,默认MD5,支持国密SM3 */
 define("SIGNATURE_METHOD", "MD5");
 require 'vendor/autoload.php';
+require 'httpClient.php';
 
 /**
  * curl post请求
  * @params 输入的参数
  */
 function curl_post($params, $url, $timout){
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    // 设置超时时间
-    curl_setopt($ch, CURLOPT_TIMEOUT, $timout);
-    // POST数据
-    curl_setopt($ch, CURLOPT_POST, 1);
-    // 把post的变量加上
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:'.'application/x-www-form-urlencoded; charset=UTF-8'));
-    $output = curl_exec($ch);
-    curl_close($ch);
-    return $output;
+    $httpClient = HttpClient::getInstance();
+    return $httpClient->post($url, $params, $timout);
 }
 
 /**
@@ -30,32 +20,8 @@ function curl_post($params, $url, $timout){
  * @params 输入的参数
  */
 function curl_get_set_header($params, $url, $timeout, $headersMap){
-    $queryString = http_build_query($params);
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url . "?" . $queryString);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    // 本地调式使用，生产环境建议不推荐禁用SSL证书验证
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 不验对等证书
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // 不验证证书中的主机名
-    // 设置超时时间
-    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-    curl_setopt($ch, CURLOPT_HTTPGET, 1);
-    $headers = [];
-    foreach ($headersMap as $key => $value) {
-        $headers[] = "$key: $value";
-    }
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    $output = curl_exec($ch);
-
-    // 检查是否有错误发生
-    if(curl_errno($ch)){
-        $output = 'Curl error: ' . curl_error($ch);
-    }
-    echo "output:{$output}";
-
-    curl_close($ch);
-    return $output;
+    $httpClient = HttpClient::getInstance();
+    return $httpClient->get($url, $params, $timeout, $headersMap);
 }
 
 /**
